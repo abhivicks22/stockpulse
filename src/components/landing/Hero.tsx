@@ -60,7 +60,7 @@ export default function Hero() {
                 {/* Features Checkmarks */}
                 <motion.div className="flex flex-col gap-4 mb-12" {...fadeUp(0.6)}>
                     {[
-                        'TradingView-grade charting engine',
+                        'Professional-grade charting engine',
                         'Live AI sentiment on every ticker',
                         'Zero latency. Zero compromises.',
                     ].map((text, i) => (
