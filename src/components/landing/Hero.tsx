@@ -1,74 +1,16 @@
 'use client'
 
-import { useEffect, useRef } from 'react'
+import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
 
-function SpaceAtmosphere() {
-    const canvasRef = useRef<HTMLCanvasElement>(null)
-
-    useEffect(() => {
-        const canvas = canvasRef.current
-        if (!canvas) return
-        const ctx = canvas.getContext('2d')
-        if (!ctx) return
-
-        let animFrame: number
-        const particles: { x: number; y: number; size: number; speedY: number; opacity: number }[] = []
-
-        const resize = () => {
-            canvas.width = window.innerWidth
-            canvas.height = window.innerHeight
-        }
-        resize()
-        window.addEventListener('resize', resize)
-
-        // Create slow rising "embers" or distant stars
-        for (let i = 0; i < 100; i++) {
-            particles.push({
-                x: Math.random() * canvas.width,
-                y: Math.random() * canvas.height,
-                size: Math.random() * 1.5,
-                speedY: (Math.random() * 0.2) + 0.05,
-                opacity: Math.random() * 0.5,
-            })
-        }
-
-        const draw = () => {
-            ctx.clearRect(0, 0, canvas.width, canvas.height)
-
-            // Atmospheric gradient at the top (like an aurora or orbital glow)
-            const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height * 0.6)
-            gradient.addColorStop(0, 'rgba(41, 10, 89, 0.4)') // Deep purple
-            gradient.addColorStop(0.5, 'rgba(20, 40, 100, 0.2)') // Deep blue
-            gradient.addColorStop(1, 'rgba(0, 0, 0, 0)')
-            ctx.fillStyle = gradient
-            ctx.fillRect(0, 0, canvas.width, canvas.height)
-
-            // Draw particles
-            particles.forEach((p) => {
-                p.y -= p.speedY
-                if (p.y < 0) {
-                    p.y = canvas.height
-                    p.x = Math.random() * canvas.width
-                }
-                ctx.beginPath()
-                ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2)
-                ctx.fillStyle = `rgba(255,255,255,${p.opacity})`
-                ctx.fill()
-            })
-            animFrame = requestAnimationFrame(draw)
-        }
-        draw()
-
-        return () => {
-            cancelAnimationFrame(animFrame)
-            window.removeEventListener('resize', resize)
-        }
-    }, [])
-
-    return <canvas ref={canvasRef} className="absolute inset-0 w-full h-full pointer-events-none z-0" />
-}
+// Dynamic import — Three.js cannot run on the server
+const SpaceScene = dynamic(() => import('./SpaceScene'), {
+    ssr: false,
+    loading: () => (
+        <div className="absolute inset-0 bg-[#000000]" />
+    ),
+})
 
 const fadeUp = (delay = 0) => ({
     initial: { opacity: 0, y: 40 },
@@ -78,63 +20,85 @@ const fadeUp = (delay = 0) => ({
 
 export default function Hero() {
     return (
-        <section className="relative min-h-[100vh] flex flex-col justify-center bg-[#000000] overflow-hidden pt-20">
-            {/* Atmospheric Background Subagent Extraction */}
-            <SpaceAtmosphere />
+        <section className="relative min-h-[100vh] flex flex-col justify-center bg-[#000000] overflow-hidden">
+            {/* ═══ LAYER 1: 3D WebGL Scene (Earth + Satellites + Stars) ═══ */}
+            <SpaceScene />
 
-            {/* Tree silhouette overlay (simulating looking up from earth) */}
-            <div
-                className="absolute bottom-0 left-0 right-0 h-[40vh] bg-contain bg-bottom bg-repeat-x opacity-40 mix-blend-screen pointer-events-none z-0"
-                style={{
-                    backgroundImage: 'url("data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' viewBox=\'0 0 100 100\' preserveAspectRatio=\'none\'%3E%3Cpath d=\'M0,100 L0,70 L5,60 L10,80 L15,40 L20,70 L25,30 L35,80 L40,50 L45,90 L50,60 L55,80 L60,40 L65,70 L70,50 L75,80 L80,20 L85,70 L95,40 L100,80 L100,100 Z\' fill=\'%23000000\' opacity=\'0.8\'/%3E%3C/svg%3E")',
-                    filter: 'blur(2px)'
-                }}
-            />
+            {/* ═══ LAYER 2: Gradient overlays for text readability ═══ */}
+            {/* Left-side vignette so text pops against the 3D scene */}
+            <div className="absolute inset-0 z-[1] pointer-events-none bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
+            {/* Bottom fade */}
+            <div className="absolute bottom-0 left-0 right-0 h-[30vh] z-[1] pointer-events-none bg-gradient-to-t from-black to-transparent" />
+            {/* Top fade for navbar */}
+            <div className="absolute top-0 left-0 right-0 h-[20vh] z-[1] pointer-events-none bg-gradient-to-b from-black/50 to-transparent" />
 
-            {/* Content Container - Left Aligned Cinematic */}
-            <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 flex flex-col items-start justify-center h-full pb-20 mt-[10vh]">
+            {/* ═══ LAYER 3: Content — Left Aligned Cinematic Typography ═══ */}
+            <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 flex flex-col items-start justify-center h-full pb-20 pt-32">
 
                 {/* Massive Heading */}
                 <motion.h1
-                    className="text-[50px] sm:text-[70px] md:text-[90px] lg:text-[110px] font-extrabold tracking-[-0.03em] leading-[0.9] text-white max-w-[1000px] mb-8"
-                    {...fadeUp(0.1)}
+                    className="text-[44px] sm:text-[60px] md:text-[80px] lg:text-[100px] font-extrabold tracking-[-0.04em] leading-[0.9] text-white max-w-[900px] mb-6"
+                    {...fadeUp(0.2)}
                 >
-                    By all accounts, this isn&apos;t the obvious choice for a trading platform.
+                    See the markets
+                    <br />
+                    from{' '}
+                    <span className="bg-gradient-to-r from-[#2962FF] to-[#7E22CE] bg-clip-text text-transparent">
+                        orbit.
+                    </span>
                 </motion.h1>
 
-                {/* Sub-heading with TV Accent Blue */}
-                <motion.h2
-                    className="text-[40px] md:text-[60px] font-medium tracking-tight text-[#2962FF] mb-12"
-                    {...fadeUp(0.3)}
+                {/* Sub-heading */}
+                <motion.p
+                    className="text-xl md:text-2xl text-[#D1D4DC] max-w-[600px] mb-10 leading-relaxed font-medium"
+                    {...fadeUp(0.4)}
                 >
-                    But what sets it apart?
-                </motion.h2>
+                    Professional-grade charting, real-time AI sentiment,
+                    and smart watchlists — all in one mission-critical dashboard.
+                </motion.p>
 
                 {/* Features Checkmarks */}
-                <motion.div className="flex flex-col gap-5 mb-14" {...fadeUp(0.5)}>
+                <motion.div className="flex flex-col gap-4 mb-12" {...fadeUp(0.6)}>
                     {[
-                        'Professional-grade charting engine built for precision',
-                        'Real-time AI sentiment analysis on every ticker',
-                        'The right environment and the exact tools you need'
+                        'TradingView-grade charting engine',
+                        'Live AI sentiment on every ticker',
+                        'Zero latency. Zero compromises.',
                     ].map((text, i) => (
-                        <div key={i} className="flex items-center gap-4">
-                            <svg className="w-8 h-8 text-[#2962FF] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12"></polyline>
+                        <div key={i} className="flex items-center gap-3">
+                            <svg className="w-6 h-6 text-[#2962FF] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
                             </svg>
-                            <span className="text-xl md:text-2xl font-medium text-white">{text}</span>
+                            <span className="text-lg md:text-xl font-medium text-white/90">{text}</span>
                         </div>
                     ))}
                 </motion.div>
 
-                {/* Primary CTA */}
-                <motion.div {...fadeUp(0.7)}>
+                {/* CTA Buttons */}
+                <motion.div className="flex flex-col sm:flex-row gap-4" {...fadeUp(0.8)}>
                     <Link href="/sign-in">
-                        <button className="bg-gradient-to-r from-[#1848FF] to-[#7E22CE] text-white text-xl font-bold px-10 py-5 rounded-lg transition-transform hover:scale-105 shadow-[0_0_30px_rgba(24,72,255,0.3)]">
+                        <button className="bg-gradient-to-r from-[#1848FF] to-[#7E22CE] text-white text-lg font-bold px-8 py-4 rounded-lg transition-all hover:scale-105 shadow-[0_0_30px_rgba(24,72,255,0.4)] hover:shadow-[0_0_50px_rgba(24,72,255,0.6)]">
                             Launch platform
+                        </button>
+                    </Link>
+                    <Link href="#stats">
+                        <button className="border border-white/20 text-white text-lg font-bold px-8 py-4 rounded-lg transition-all hover:bg-white/5 hover:border-white/40 backdrop-blur-sm">
+                            Explore mission
                         </button>
                     </Link>
                 </motion.div>
             </div>
+
+            {/* ═══ LAYER 4: Scroll indicator ═══ */}
+            <motion.div
+                className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
+                animate={{ y: [0, 10, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+            >
+                <svg className="w-6 h-6 text-white/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                    <path d="M12 5v14M5 12l7 7 7-7" />
+                </svg>
+            </motion.div>
         </section>
     )
 }
+
