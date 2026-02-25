@@ -1,9 +1,10 @@
 'use client'
 
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useState } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { ScrollControls, Scroll, useScroll, Stars, PerspectiveCamera } from '@react-three/drei'
 import * as THREE from 'three'
+import { Play, Pause } from 'lucide-react'
 
 import Navbar from '@/components/landing/Navbar'
 import Hero from '@/components/landing/Hero'
@@ -500,6 +501,20 @@ function BlackHoleStage({ position }: { position: [number, number, number] }) {
    PAGE WRAPPER
    ────────────────────────────────────────────── */
 export default function UniverseExperience() {
+    const videoRef = useRef<HTMLVideoElement>(null)
+    const [isPlaying, setIsPlaying] = useState(false)
+
+    const togglePlay = () => {
+        if (videoRef.current) {
+            if (isPlaying) {
+                videoRef.current.pause()
+            } else {
+                videoRef.current.play()
+            }
+            // State is also updated by onPlay/onPause events for reliability
+        }
+    }
+
     return (
         <div className="w-full h-screen bg-[#020202]">
             {/* Fixed Navbar on top of everything */}
@@ -536,18 +551,33 @@ export default function UniverseExperience() {
                                     </div>
 
                                     {/* Video Player Container */}
-                                    <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(24,72,255,0.15)] bg-black/40 aspect-[1920/982] backdrop-blur-md group mx-auto">
+                                    <div
+                                        className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(24,72,255,0.15)] bg-black/40 aspect-[1920/982] backdrop-blur-md group mx-auto cursor-pointer"
+                                        onClick={togglePlay}
+                                    >
                                         <video
+                                            ref={videoRef}
                                             src="/videos/demo-optimized.mp4"
-                                            controls
-                                            autoPlay
-                                            loop
-                                            muted
+                                            controls={false}
                                             playsInline
+                                            onPlay={() => setIsPlaying(true)}
+                                            onPause={() => setIsPlaying(false)}
+                                            onEnded={() => setIsPlaying(false)}
                                             className="w-full h-full object-cover rounded-2xl"
                                         >
                                             Your browser does not support the video tag.
                                         </video>
+
+                                        {/* Play/Pause Overlay */}
+                                        <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${isPlaying ? 'bg-black/0 opacity-0 group-hover:bg-black/20 group-hover:opacity-100' : 'bg-black/40 opacity-100'}`}>
+                                            <div className="w-20 h-20 md:w-28 md:h-28 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white shadow-2xl transition-transform duration-300 hover:scale-110">
+                                                {isPlaying ? (
+                                                    <Pause className="w-10 h-10 md:w-14 md:h-14 opacity-80" />
+                                                ) : (
+                                                    <Play className="w-10 h-10 md:w-14 md:h-14 ml-2 opacity-100" />
+                                                )}
+                                            </div>
+                                        </div>
 
                                         {/* Decorative glow behind video */}
                                         <div className="absolute -inset-1 bg-gradient-to-r from-[#1848FF] to-[#7E22CE] opacity-20 blur-2xl group-hover:opacity-30 transition-opacity duration-1000 -z-10 rounded-3xl" />
