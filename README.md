@@ -3,7 +3,7 @@
 > **Zero Compromise. Zero Latency. Zero Dollars.**
 > Your AI-powered stock market dashboard, built for the AdaL Vibecoding Bootcamp Capstone.
 
-Live: [stockpulse.vercel.app](https://stockpulse.vercel.app) &nbsp;|&nbsp; Repo: [github.com/abhivicks22/stockpulse](https://github.com/abhivicks22/stockpulse)
+Live: [stockpulse.vercel.app](https://stockpulse-three.vercel.app/) &nbsp;|&nbsp; Repo: [github.com/abhivicks22/stockpulse](https://github.com/abhivicks22/stockpulse)
 
 ---
 
