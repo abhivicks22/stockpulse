@@ -114,25 +114,34 @@ function EarthStage({ position }: { position: [number, number, number] }) {
 
                 void main() {
                     float NdotL = dot(vWorldNormal, uLightDir);
-                    float daylight = smoothstep(-0.1, 0.3, NdotL);
+                    float daylight = smoothstep(-0.2, 0.4, NdotL);
                     vec3 viewDir = normalize(-vPosition);
-                    float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 4.0);
+                    float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.0);
                     
-                    vec2 uv = vUv + vec2(uTime * 0.002, 0.0);
-                    float n = fbm(uv * 6.0);
-                    float continent = smoothstep(0.45, 0.55, n);
+                    vec2 uv = vUv + vec2(uTime * 0.01, 0.0); // Earth rotation
                     
-                    // Very dark oceans and land
-                    vec3 oceanColor = vec3(0.01, 0.02, 0.05);
-                    vec3 landColor = vec3(0.02, 0.02, 0.02);
+                    // Generate continents and oceans
+                    float n = fbm(uv * 7.0);
+                    float continent = smoothstep(0.48, 0.55, n);
+                    
+                    // Dark oceans and land
+                    vec3 oceanColor = vec3(0.01, 0.03, 0.08);
+                    vec3 landColor = vec3(0.04, 0.05, 0.04);
                     vec3 dayColor = mix(oceanColor, landColor, continent);
+                    
+                    // Specular reflection for oceans only
+                    vec3 halfVector = normalize(uLightDir + viewDir);
+                    float NdotH = max(0.0, dot(vWorldNormal, halfVector));
+                    float specular = pow(NdotH, 50.0) * (1.0 - continent) * 0.8; // Only ocean reflects
                     
                     vec3 nightColor = vec3(0.002, 0.002, 0.005);
                     
-                    vec3 surfaceColor = mix(nightColor, dayColor, daylight);
+                    // Combine diffuse and specular
+                    vec3 surfaceColor = mix(nightColor, dayColor, daylight) + (specular * daylight * vec3(0.8, 0.9, 1.0));
                     
-                    // Thin blue atmosphere edge
-                    surfaceColor += vec3(0.1, 0.3, 0.8) * fresnel * 0.8 * daylight;
+                    // Atmospheric scattering (rim glow)
+                    vec3 atmosphereColor = vec3(0.2, 0.5, 1.0);
+                    surfaceColor += atmosphereColor * fresnel * 0.6 * smoothstep(-0.5, 0.5, NdotL);
 
                     gl_FragColor = vec4(surfaceColor, 1.0);
                 }
@@ -162,12 +171,17 @@ function EarthStage({ position }: { position: [number, number, number] }) {
                 varying vec3 vPosition;
                 ${noiseShaderCode}
                 void main() {
-                    vec2 uv = vUv + vec2(uTime * 0.004, 0.0);
-                    float clouds = fbm(uv * 4.0);
-                    clouds = smoothstep(0.5, 0.7, clouds);
+                    // Clouds rotate slightly faster than the earth
+                    vec2 uv = vUv + vec2(uTime * 0.015, 0.0);
+                    float clouds = fbm(uv * 5.0) * fbm(uv * 10.0 + uTime * 0.005); // dynamic swirling
+                    clouds = smoothstep(0.4, 0.8, clouds);
+                    
                     vec3 viewDir = normalize(-vPosition);
                     float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 2.0);
-                    float alpha = clouds * 0.15 * (1.0 - fresnel * 0.5);
+                    
+                    // Clouds are thicker at edge
+                    float alpha = clouds * 0.5 + (fresnel * clouds * 0.3);
+                    
                     gl_FragColor = vec4(1.0, 1.0, 1.0, alpha);
                 }
             `,
@@ -233,26 +247,49 @@ function MarsStage({ position }: { position: [number, number, number] }) {
 
                 ${noiseShaderCode}
 
+                // Ridged noise for crisp craters
+                float ridgedMF(vec2 p) {
+                    float sum = 0.0;
+                    float freq = 1.0;
+                    float amp = 0.5;
+                    for(int i=0; i<4; i++) {
+                        float n = abs(noise(p * freq));
+                        sum += (1.0 - n) * amp;
+                        freq *= 2.0;
+                        amp *= 0.5;
+                    }
+                    return sum;
+                }
+
                 void main() {
                     float NdotL = dot(vWorldNormal, uLightDir);
-                    float daylight = smoothstep(-0.1, 0.3, NdotL);
+                    float daylight = smoothstep(-0.2, 0.4, NdotL);
                     vec3 viewDir = normalize(-vPosition);
                     float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.0);
                     
-                    vec2 uv = vUv + vec2(uTime * 0.001, 0.0);
-                    float n1 = fbm(uv * 3.0);
-                    float n2 = fbm(uv * 10.0 + n1);
+                    vec2 uv = vUv + vec2(uTime * 0.005, 0.0);
+                    
+                    // Craters and ridges
+                    float n1 = fbm(uv * 4.0);
+                    float craters = ridgedMF(uv * 15.0 + n1);
                     
                     // Dark, dusty red/orange palette
-                    vec3 color1 = vec3(0.15, 0.04, 0.01);
-                    vec3 color2 = vec3(0.08, 0.02, 0.01);
-                    vec3 dayColor = mix(color1, color2, smoothstep(0.3, 0.7, n2));
+                    vec3 color1 = vec3(0.25, 0.08, 0.03); // Lighter rust
+                    vec3 color2 = vec3(0.10, 0.02, 0.01); // Deep rust
+                    vec3 dayColor = mix(color2, color1, smoothstep(0.2, 0.8, craters));
                     
-                    vec3 nightColor = vec3(0.005, 0.001, 0.001);
+                    // Ice Caps at the poles (vUv.y close to 0 or 1)
+                    float distToPole = min(vUv.y, 1.0 - vUv.y);
+                    float iceMask = smoothstep(0.15, 0.05, distToPole + fbm(uv * 10.0) * 0.05);
+                    vec3 iceColor = vec3(0.8, 0.85, 0.9);
+                    dayColor = mix(dayColor, iceColor, iceMask);
+                    
+                    vec3 nightColor = vec3(0.01, 0.005, 0.005);
                     vec3 surfaceColor = mix(nightColor, dayColor, daylight);
                     
                     // Thin rusty atmosphere
-                    surfaceColor += vec3(0.3, 0.1, 0.05) * fresnel * 0.4 * daylight;
+                    vec3 atmosphereColor = vec3(0.5, 0.2, 0.1);
+                    surfaceColor += atmosphereColor * fresnel * 0.4 * smoothstep(-0.2, 0.5, NdotL);
 
                     gl_FragColor = vec4(surfaceColor, 1.0);
                 }
@@ -313,20 +350,39 @@ function JupiterStage({ position }: { position: [number, number, number] }) {
 
                 void main() {
                     float NdotL = dot(vWorldNormal, uLightDir);
-                    float daylight = smoothstep(-0.1, 0.3, NdotL);
+                    float daylight = smoothstep(-0.2, 0.4, NdotL);
+                    vec3 viewDir = normalize(-vPosition);
+                    float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.0);
                     
-                    // Gas giant bands (horizontal stretching)
                     vec2 uv = vUv;
-                    uv.x += uTime * 0.005;
-                    float bands = sin(uv.y * 30.0 + fbm(uv * vec2(2.0, 10.0)) * 4.0);
                     
-                    // Muted gas giant colors (beige, brown, grey-white)
-                    vec3 bandColor1 = vec3(0.12, 0.10, 0.08);
-                    vec3 bandColor2 = vec3(0.06, 0.05, 0.04);
-                    vec3 dayColor = mix(bandColor1, bandColor2, smoothstep(-0.5, 0.5, bands));
+                    // Differential rotation (bands move at different speeds based on latitude)
+                    // uv.y maps 0 to 1 top to bottom.
+                    float bandSpeed = sin(uv.y * 15.0) * 0.02; 
+                    uv.x += uTime * bandSpeed + uTime * 0.01;
                     
-                    vec3 nightColor = vec3(0.002, 0.002, 0.002);
+                    // Complex fluid turbulence
+                    vec2 noiseUv = uv * vec2(4.0, 15.0);
+                    float n1 = fbm(noiseUv);
+                    float n2 = fbm(noiseUv + vec2(n1, n1) + uTime * 0.02);
+                    
+                    // Horizontal stretching for gas giant look, perturbed by turbulence
+                    float bands = sin(uv.y * 40.0 + n2 * 5.0);
+                    
+                    // Vivid but slightly muted gas giant colors
+                    vec3 color1 = vec3(0.25, 0.20, 0.15); // Beige
+                    vec3 color2 = vec3(0.12, 0.08, 0.06); // Deep brown
+                    vec3 color3 = vec3(0.30, 0.28, 0.25); // Cream/White
+                    
+                    vec3 dayColor = mix(color1, color2, smoothstep(-0.5, 0.5, bands));
+                    // Introduce storms/cream clouds in highly turbulent areas
+                    dayColor = mix(dayColor, color3, smoothstep(0.6, 1.0, n2));
+                    
+                    vec3 nightColor = vec3(0.01, 0.01, 0.01);
                     vec3 surfaceColor = mix(nightColor, dayColor, daylight);
+
+                    // Soft atmospheric rim
+                    surfaceColor += vec3(0.2, 0.15, 0.1) * fresnel * 0.5 * daylight;
                     
                     gl_FragColor = vec4(surfaceColor, 1.0);
                 }
