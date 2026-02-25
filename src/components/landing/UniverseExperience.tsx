@@ -1,6 +1,6 @@
 'use client'
 
-import { useRef, useMemo, useState } from 'react'
+import { useRef, useMemo, useState, useEffect } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { ScrollControls, Scroll, useScroll, Stars, PerspectiveCamera } from '@react-three/drei'
 import * as THREE from 'three'
@@ -506,6 +506,30 @@ function BlackHoleStage({ position }: { position: [number, number, number] }) {
 export default function UniverseExperience() {
     const videoRef = useRef<HTMLVideoElement>(null)
     const [isPlaying, setIsPlaying] = useState(false)
+    const [pages, setPages] = useState(8) // Default fallback
+    const containerRef = useRef<HTMLDivElement>(null)
+
+    useEffect(() => {
+        const updatePages = () => {
+            if (containerRef.current) {
+                const height = containerRef.current.offsetHeight
+                // Calculate precise pages needed based on absolute HTML height (+ a tiny buffer)
+                const newPages = height / window.innerHeight
+                setPages(newPages > 0 ? newPages : 8)
+            }
+        }
+
+        updatePages()
+
+        window.addEventListener('resize', updatePages)
+        const observer = new ResizeObserver(() => updatePages())
+        if (containerRef.current) observer.observe(containerRef.current)
+
+        return () => {
+            window.removeEventListener('resize', updatePages)
+            observer.disconnect()
+        }
+    }, [])
 
     const togglePlay = () => {
         if (videoRef.current) {
@@ -514,7 +538,6 @@ export default function UniverseExperience() {
             } else {
                 videoRef.current.play()
             }
-            // State is also updated by onPlay/onPause events for reliability
         }
     }
 
@@ -526,7 +549,7 @@ export default function UniverseExperience() {
             </div>
 
             <Canvas gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }} dpr={[1, 2]}>
-                <ScrollControls pages={7} damping={0.25}>
+                <ScrollControls pages={pages} damping={0.25}>
 
                     {/* The 3D Camera Flight reacting to scroll */}
                     <Scroll>
@@ -535,7 +558,7 @@ export default function UniverseExperience() {
 
                     {/* The HTML Overlay scrolling normally over the 3D scene */}
                     <Scroll html style={{ width: '100%' }}>
-                        <div className="relative w-full">
+                        <div ref={containerRef} className="relative w-full pb-10">
                             {/* PAGE 1: Earth / Hero */}
                             <div className="min-h-screen">
                                 <Hero />
