@@ -514,7 +514,7 @@ export default function UniverseExperience() {
                                     </div>
 
                                     {/* Video Player Container */}
-                                    <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(24,72,255,0.15)] bg-black/40 aspect-[2940/1732] backdrop-blur-md group mx-auto">
+                                    <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(24,72,255,0.15)] bg-black/40 aspect-[1920/1032] backdrop-blur-md group mx-auto">
                                         <video
                                             src="/videos/demo-optimized.mp4"
                                             controls
