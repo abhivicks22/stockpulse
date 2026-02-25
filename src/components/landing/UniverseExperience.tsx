@@ -114,35 +114,57 @@ function EarthStage({ position }: { position: [number, number, number] }) {
 
                 void main() {
                     float NdotL = dot(vWorldNormal, uLightDir);
+                    // Daylight mask is smooth edge from day to night
                     float daylight = smoothstep(-0.2, 0.4, NdotL);
+                    
                     vec3 viewDir = normalize(-vPosition);
-                    float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.0);
+                    float fresnel = pow(1.0 - abs(dot(vNormal, viewDir)), 3.0); // Thicker rim glow
                     
                     vec2 uv = vUv + vec2(uTime * 0.01, 0.0); // Earth rotation
                     
                     // Generate continents and oceans
                     float n = fbm(uv * 7.0);
-                    float continent = smoothstep(0.48, 0.55, n);
+                    float continentMask = smoothstep(0.48, 0.55, n);
                     
-                    // Dark oceans and land
-                    vec3 oceanColor = vec3(0.01, 0.03, 0.08);
-                    vec3 landColor = vec3(0.04, 0.05, 0.04);
-                    vec3 dayColor = mix(oceanColor, landColor, continent);
+                    // Generate City Lights (clusters on land only)
+                    // High frequency noise for "cities"
+                    float noiseCity = fbm(uv * 50.0);
+                    // Low frequency noise for "population density"
+                    float noisePop = fbm(uv * 3.0 + vec2(10.0));
+                    
+                    // Intersect land + random spots + density = cities
+                    float cities = smoothstep(0.6, 0.9, noiseCity) * smoothstep(0.4, 0.8, noisePop) * continentMask;
+                    // Lights are ONLY visible on the night side (inverse of daylight)
+                    float nightShadowMask = 1.0 - smoothstep(-0.5, 0.1, NdotL);
+                    
+                    vec3 cityGlowColor = vec3(1.0, 0.7, 0.2); // Warm tungsten streetlights
+                    vec3 cityLights = cities * nightShadowMask * cityGlowColor * 2.5; // Bump up brightness
+                    
+                    // Base Colors
+                    vec3 oceanColor = vec3(0.01, 0.03, 0.08); // Dark deep blue
+                    vec3 landColor = vec3(0.04, 0.05, 0.04);  // Very dark green/grey
+                    vec3 dayColor = mix(oceanColor, landColor, continentMask);
                     
                     // Specular reflection for oceans only
                     vec3 halfVector = normalize(uLightDir + viewDir);
                     float NdotH = max(0.0, dot(vWorldNormal, halfVector));
-                    float specular = pow(NdotH, 50.0) * (1.0 - continent) * 0.8; // Only ocean reflects
+                    float specular = pow(NdotH, 50.0) * (1.0 - continentMask) * 0.8; 
                     
-                    vec3 nightColor = vec3(0.002, 0.002, 0.005);
+                    vec3 nightColor = vec3(0.002, 0.002, 0.006); // Extremely dark blue ambient night
                     
-                    // Combine diffuse and specular
+                    // Combine diffuse and specular (Day vs Night)
                     vec3 surfaceColor = mix(nightColor, dayColor, daylight) + (specular * daylight * vec3(0.8, 0.9, 1.0));
                     
-                    // Atmospheric scattering (rim glow)
+                    // ADD CITY LIGHTS to the surface
+                    surfaceColor += cityLights;
+                    
+                    // Intense Atmospheric scattering (Vibrant Blue Rim Glow)
                     vec3 atmosphereColor = vec3(0.2, 0.5, 1.0);
-                    surfaceColor += atmosphereColor * fresnel * 0.6 * smoothstep(-0.5, 0.5, NdotL);
+                    // The atmosphere catches the sun mostly on the lit edge, but bleeds into darkness slightly
+                    float rimLight = fresnel * 0.8 * smoothstep(-0.6, 0.6, NdotL);
+                    surfaceColor += atmosphereColor * rimLight;
 
+                    // Final output
                     gl_FragColor = vec4(surfaceColor, 1.0);
                 }
             `,

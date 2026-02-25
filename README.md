@@ -29,7 +29,6 @@ During development, we tackled several complex technical hurdles:
 Looking forward, we plan to extend StockPulse with:
 1. **Real-time Price Alerts:** Allow users to set SMS/Email alerts when a stock crosses a specific price threshold or when AI sentiment dramatically shifts.
 2. **Portfolio Tracking:** Beyond a simple watchlist, let users input their holdings to calculate live P&L (Profit & Loss) alongside the sentiment analysis.
-3. **Alternative Auth Providers:** Implementing Google, Discord, and Apple OAuth options to reduce friction during onboarding.
 
 ---
 
