@@ -552,7 +552,7 @@ export default function UniverseExperience() {
 
                                     {/* Video Player Container */}
                                     <div
-                                        className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(24,72,255,0.15)] bg-black/40 aspect-[1920/982] backdrop-blur-md group mx-auto cursor-pointer"
+                                        className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(24,72,255,0.15)] bg-black/40 aspect-[1920/1038] backdrop-blur-md group mx-auto cursor-pointer"
                                         onClick={togglePlay}
                                     >
                                         <video
