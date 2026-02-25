@@ -4,6 +4,7 @@
 > Your AI-powered stock market dashboard, built for the AdaL Vibecoding Bootcamp Capstone.
 
  Repo: [github.com/abhivicks22/stockpulse](https://github.com/abhivicks22/stockpulse)
+ live link:[https://stockpulse-three.vercel.app/]
 
 ---
 
