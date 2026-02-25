@@ -38,8 +38,12 @@ export default function SentimentBadge({ symbol }: { symbol: string }) {
                         {data.label} {data.score}%
                     </span>
                 </TooltipTrigger>
-                <TooltipContent className="bg-[#131722] border-white/10 text-zinc-300 max-w-64">
-                    <p className="text-xs">{data.summary || 'No recent news'}</p>
+                <TooltipContent className="bg-[#131722] border-indigo-500/30 text-zinc-300 max-w-72 p-4 shadow-xl shadow-indigo-500/10">
+                    <div className="flex items-center gap-2 mb-2 border-b border-white/10 pb-2">
+                        <div className="w-2 h-2 rounded-full bg-indigo-500 animate-pulse" />
+                        <span className="text-xs font-bold text-white uppercase tracking-wider">Live AI Analysis</span>
+                    </div>
+                    <p className="text-sm leading-relaxed text-zinc-300">{data.summary || 'No recent news available to analyze.'}</p>
                 </TooltipContent>
             </Tooltip>
         </TooltipProvider>
