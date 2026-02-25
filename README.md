@@ -6,6 +6,33 @@ Live: [stockpulse.vercel.app](https://stockpulse.vercel.app) &nbsp;|&nbsp; Repo:
 
 ---
 
+## 📖 Capstone Documentation
+
+### The Problem
+Traditional retail trading platforms suffer from two major flaws:
+1. **Information Overload:** Legacy dashboards bombard users with thousands of metrics, ads, and cluttered UI, making it difficult to find actionable insights.
+2. **Emotional Trading:** Retail investors often trade based on hype rather than data because they lack a quick, objective way to gauge market sentiment.
+
+### Our Solution (Value Proposition)
+StockPulse is a premium, distraction-free market dashboard that combines institutional-grade charting with AI-driven sentiment analysis. 
+- **Professional-Grade Visuals:** We stripped away the noise, providing clean, highly-performant TradingView charts in a modern glassmorphic interface.
+- **Live AI Sentiment Analysis:** Instead of reading 15 news articles, our AI instantly digests market news and tags stocks as **Bullish**, **Bearish**, or **Neutral**—providing an instant pulse check to prevent emotional trading.
+- **Fuzzy Search & Sync:** Lightning-fast stock discovery and persistent Postgres-backed watchlists ensure a seamless experience across all devices.
+
+### Challenges & Issues Addressed
+During development, we tackled several complex technical hurdles:
+- **WebGL Performance in Next.js:** Integrating React Three Fiber (for the 3D hero background) with Next.js Server Components caused hydration mismatches. We solved this by creating a dynamically imported, pure-client `UniverseExperience` wrapper.
+- **Data API Rate Limiting:** Free financial APIs (like AlphaVantage) heavily restrict API calls. We designed a robust fallback mechanism using intelligent caching and seeded mock data, ensuring the dashboard always loads instantly during demos.
+- **OAuth Callbacks:** Deploying to Vercel initially broke our Supabase GitHub OAuth callback due to hardcoded localhost URLs. We successfully isolated and reconfigured the auth environment variables for production.
+
+### Future Enhancements
+Looking forward, we plan to extend StockPulse with:
+1. **Real-time Price Alerts:** Allow users to set SMS/Email alerts when a stock crosses a specific price threshold or when AI sentiment dramatically shifts.
+2. **Portfolio Tracking:** Beyond a simple watchlist, let users input their holdings to calculate live P&L (Profit & Loss) alongside the sentiment analysis.
+3. **Alternative Auth Providers:** Implementing Google, Discord, and Apple OAuth options to reduce friction during onboarding.
+
+---
+
 ## Features
 
 - 🔐 **GitHub OAuth** via Supabase Auth
