@@ -11,6 +11,9 @@ import Hero from '@/components/landing/Hero'
 import MissionStats from '@/components/landing/MissionStats'
 import CTA from '@/components/landing/CTA'
 import Footer from '@/components/landing/Footer'
+import MarketsSection from '@/components/landing/MarketsSection'
+import FeaturesSection from '@/components/landing/FeaturesSection'
+import PricingSection from '@/components/landing/PricingSection'
 
 // --- SHARED NOISE FUNCTIONS ---
 const noiseShaderCode = `
@@ -523,7 +526,7 @@ export default function UniverseExperience() {
             </div>
 
             <Canvas gl={{ antialias: true, alpha: true, powerPreference: 'high-performance' }} dpr={[1, 2]}>
-                <ScrollControls pages={4} damping={0.25}>
+                <ScrollControls pages={7} damping={0.25}>
 
                     {/* The 3D Camera Flight reacting to scroll */}
                     <Scroll>
@@ -581,17 +584,32 @@ export default function UniverseExperience() {
                                 </div>
                             </div>
 
-                            {/* PAGE 2: Mars / Analytics Stats */}
+                            {/* PAGE 2: Markets Array */}
+                            <div className="min-h-[50vh]">
+                                <MarketsSection />
+                            </div>
+
+                            {/* PAGE 3: Features Bento Box */}
+                            <div className="min-h-screen">
+                                <FeaturesSection />
+                            </div>
+
+                            {/* PAGE 4: Mars / Analytics Stats */}
                             <div className="min-h-screen">
                                 <MissionStats />
                             </div>
 
-                            {/* PAGE 3: Jupiter / CTA */}
+                            {/* PAGE 5: Pricing Card */}
+                            <div className="min-h-screen">
+                                <PricingSection />
+                            </div>
+
+                            {/* PAGE 6: Jupiter / CTA */}
                             <div className="min-h-screen pt-32 pb-32">
                                 <CTA />
                             </div>
 
-                            {/* PAGE 4: Black Hole / Footer */}
+                            {/* PAGE 7: Black Hole / Footer */}
                             <div className="min-h-screen flex flex-col justify-end">
                                 <Footer />
                             </div>

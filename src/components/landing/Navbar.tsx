@@ -9,7 +9,7 @@ import { Button } from '@/components/ui/button'
 const navLinks = [
     { label: 'Markets', href: '#markets' },
     { label: 'Features', href: '#features' },
-    { label: 'Pricing', href: '#cta' },
+    { label: 'Pricing', href: '#pricing' },
 ]
 
 export default function Navbar() {
