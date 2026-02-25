@@ -514,15 +514,19 @@ export default function UniverseExperience() {
                                     </div>
 
                                     {/* Video Player Container */}
-                                    <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(24,72,255,0.15)] bg-black/40 aspect-video backdrop-blur-md group mx-auto">
-                                        <video 
-                                            src="/videos/demo.mov" 
-                                            controls 
+                                    <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(24,72,255,0.15)] bg-black/40 aspect-[2940/1732] backdrop-blur-md group mx-auto">
+                                        <video
+                                            src="/videos/demo-optimized.mp4"
+                                            controls
+                                            autoPlay
+                                            loop
+                                            muted
+                                            playsInline
                                             className="w-full h-full object-cover rounded-2xl"
                                         >
                                             Your browser does not support the video tag.
                                         </video>
-                                        
+
                                         {/* Decorative glow behind video */}
                                         <div className="absolute -inset-1 bg-gradient-to-r from-[#1848FF] to-[#7E22CE] opacity-20 blur-2xl group-hover:opacity-30 transition-opacity duration-1000 -z-10 rounded-3xl" />
                                     </div>
