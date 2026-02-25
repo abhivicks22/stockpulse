@@ -569,13 +569,9 @@ export default function UniverseExperience() {
                                         </video>
 
                                         {/* Play/Pause Overlay */}
-                                        <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 ${isPlaying ? 'bg-black/0 opacity-0 group-hover:bg-black/20 group-hover:opacity-100' : 'bg-black/40 opacity-100'}`}>
+                                        <div className={`absolute inset-0 flex items-center justify-center transition-all duration-300 pointer-events-none ${isPlaying ? 'opacity-0' : 'bg-black/40 opacity-100'}`}>
                                             <div className="w-20 h-20 md:w-28 md:h-28 bg-white/10 backdrop-blur-md border border-white/20 rounded-full flex items-center justify-center text-white shadow-2xl transition-transform duration-300 hover:scale-110">
-                                                {isPlaying ? (
-                                                    <Pause className="w-10 h-10 md:w-14 md:h-14 opacity-80" />
-                                                ) : (
-                                                    <Play className="w-10 h-10 md:w-14 md:h-14 ml-2 opacity-100" />
-                                                )}
+                                                <Play className="w-10 h-10 md:w-14 md:h-14 ml-2 opacity-100" />
                                             </div>
                                         </div>
 
