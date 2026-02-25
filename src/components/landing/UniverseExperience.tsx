@@ -501,6 +501,34 @@ export default function UniverseExperience() {
                                 <Hero />
                             </div>
 
+                            {/* DEMO VIDEO SECTION */}
+                            <div className="w-full py-12 md:py-24 relative z-10">
+                                <div className="max-w-5xl mx-auto px-6">
+                                    <div className="text-center mb-10 md:mb-16">
+                                        <h2 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight mb-4">
+                                            See StockPulse in <span className="text-transparent bg-clip-text bg-gradient-to-r from-[#1848FF] to-[#7E22CE]">Action</span>
+                                        </h2>
+                                        <p className="text-zinc-400 max-w-2xl mx-auto text-base md:text-lg px-4">
+                                            Watch how professional-grade charting, AI sentiment analysis, and instant fuzzy-search come together in one distraction-free dashboard.
+                                        </p>
+                                    </div>
+
+                                    {/* Video Player Container */}
+                                    <div className="relative rounded-2xl overflow-hidden border border-white/10 shadow-[0_0_50px_rgba(24,72,255,0.15)] bg-black/40 aspect-video backdrop-blur-md group mx-auto">
+                                        <video 
+                                            src="/videos/demo.mov" 
+                                            controls 
+                                            className="w-full h-full object-cover rounded-2xl"
+                                        >
+                                            Your browser does not support the video tag.
+                                        </video>
+                                        
+                                        {/* Decorative glow behind video */}
+                                        <div className="absolute -inset-1 bg-gradient-to-r from-[#1848FF] to-[#7E22CE] opacity-20 blur-2xl group-hover:opacity-30 transition-opacity duration-1000 -z-10 rounded-3xl" />
+                                    </div>
+                                </div>
+                            </div>
+
                             {/* PAGE 2: Mars / Analytics Stats */}
                             <div className="min-h-screen">
                                 <MissionStats />
