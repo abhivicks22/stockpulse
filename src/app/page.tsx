@@ -1,24 +1,24 @@
-import Navbar from '@/components/landing/Navbar'
-import Hero from '@/components/landing/Hero'
-import MissionStats from '@/components/landing/MissionStats'
-import CTA from '@/components/landing/CTA'
-import Footer from '@/components/landing/Footer'
+'use client'
+
+import dynamic from 'next/dynamic'
+
+// We dynamically import the UniverseExperience because Three.js/React Three Fiber
+// relies heavily on browser APIs (window, document, WebGL limits) that crash on SSR.
+const UniverseExperience = dynamic(() => import('@/components/landing/UniverseExperience'), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full h-screen bg-black flex items-center justify-center">
+      <div className="animate-pulse text-white/50 tracking-widest text-sm uppercase">
+        Initializing Flight Systems...
+      </div>
+    </div>
+  ),
+})
 
 export default function Home() {
   return (
-    <main className="bg-[#000000] text-white selection:bg-[#2962FF] selection:text-white">
-      <Navbar />
-      <Hero />
-      <MissionStats />
-
-      {/* We reuse the generic CTA block but wrap it to ensure black background continuation */}
-      <div className="bg-[#000000] border-t border-white/10">
-        <CTA />
-      </div>
-
-      <div className="bg-[#000000] border-t border-white/10">
-        <Footer />
-      </div>
+    <main className="bg-black text-white selection:bg-[#2962FF] selection:text-white">
+      <UniverseExperience />
     </main>
   )
 }

@@ -1,16 +1,7 @@
 'use client'
 
-import dynamic from 'next/dynamic'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-
-// Dynamic import — Three.js cannot run on the server
-const SpaceScene = dynamic(() => import('./SpaceScene'), {
-    ssr: false,
-    loading: () => (
-        <div className="absolute inset-0 bg-[#000000]" />
-    ),
-})
 
 const fadeUp = (delay = 0) => ({
     initial: { opacity: 0, y: 40 },
@@ -20,21 +11,14 @@ const fadeUp = (delay = 0) => ({
 
 export default function Hero() {
     return (
-        <section className="relative min-h-[100vh] flex flex-col justify-center bg-[#000000] overflow-hidden">
-            {/* ═══ LAYER 1: 3D WebGL Scene (Earth + Satellites + Stars) ═══ */}
-            <SpaceScene />
-
-            {/* ═══ LAYER 2: Gradient overlays for text readability ═══ */}
-            {/* Left-side vignette so text pops against the 3D scene */}
+        <section className="relative min-h-[100vh] flex flex-col justify-center overflow-hidden">
+            {/* ═══ Gradient overlays for text readability against bright 3D objects ═══ */}
             <div className="absolute inset-0 z-[1] pointer-events-none bg-gradient-to-r from-black/80 via-black/40 to-transparent" />
-            {/* Bottom fade */}
-            <div className="absolute bottom-0 left-0 right-0 h-[30vh] z-[1] pointer-events-none bg-gradient-to-t from-black to-transparent" />
-            {/* Top fade for navbar */}
+            <div className="absolute bottom-0 left-0 right-0 h-[30vh] z-[1] pointer-events-none bg-gradient-to-t from-black via-black/50 to-transparent" />
             <div className="absolute top-0 left-0 right-0 h-[20vh] z-[1] pointer-events-none bg-gradient-to-b from-black/50 to-transparent" />
 
-            {/* ═══ LAYER 3: Content — Left Aligned Cinematic Typography ═══ */}
+            {/* ═══ Content — Left Aligned Cinematic Typography ═══ */}
             <div className="relative z-10 w-full max-w-7xl mx-auto px-6 lg:px-8 flex flex-col items-start justify-center h-full pb-20 pt-32">
-
                 {/* Massive Heading */}
                 <motion.h1
                     className="text-[44px] sm:text-[60px] md:text-[80px] lg:text-[100px] font-extrabold tracking-[-0.04em] leading-[0.9] text-white max-w-[900px] mb-6"
@@ -88,15 +72,18 @@ export default function Hero() {
                 </motion.div>
             </div>
 
-            {/* ═══ LAYER 4: Scroll indicator ═══ */}
+            {/* ═══ Scroll indicator ═══ */}
             <motion.div
                 className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10"
                 animate={{ y: [0, 10, 0] }}
                 transition={{ duration: 2, repeat: Infinity }}
             >
-                <svg className="w-6 h-6 text-white/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M12 5v14M5 12l7 7 7-7" />
-                </svg>
+                <div className="flex flex-col items-center gap-2">
+                    <span className="text-white/40 text-sm font-medium uppercase tracking-widest">Flight Path</span>
+                    <svg className="w-6 h-6 text-white/40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                        <path d="M12 5v14M5 12l7 7 7-7" />
+                    </svg>
+                </div>
             </motion.div>
         </section>
     )
