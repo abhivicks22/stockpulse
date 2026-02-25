@@ -84,7 +84,7 @@ export default function WatchlistSidebar() {
     ).filter(s => !items.some(i => i.symbol === s.symbol))
 
     return (
-        <aside className="w-[300px] h-full bg-[#131722] border-l border-[#2A2E39] flex flex-col z-10 shrink-0">
+        <aside className="w-full lg:w-[300px] h-[45vh] lg:h-full bg-[#131722] border-t lg:border-t-0 lg:border-l border-[#2A2E39] flex flex-col z-10 shrink-0">
             {/* Header */}
             <div className="flex items-center justify-between px-4 py-3 border-b border-[#2A2E39]">
                 <span className="text-[#D1D4DC] text-[13px] font-bold">Watchlist</span>

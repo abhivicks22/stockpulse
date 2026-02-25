@@ -15,13 +15,13 @@ const tools = [
 
 export default function LeftToolbar() {
     return (
-        <aside className="w-[50px] bg-[#131722] border-r border-[#2A2E39] flex flex-col items-center py-2 gap-2 z-10">
+        <aside className="hidden sm:flex w-[50px] bg-[#131722] border-r border-[#2A2E39] flex-col items-center py-2 gap-2 z-10 shrink-0">
             {tools.map((toolbarItem, idx) => (
                 <button
                     key={idx}
                     className={`w-10 h-10 rounded-lg flex items-center justify-center transition-colors ${toolbarItem.active
-                            ? 'text-indigo-500 bg-indigo-500/10'
-                            : 'text-[#A3A6AF] hover:bg-[#2A2E39] hover:text-[#D1D4DC]'
+                        ? 'text-indigo-500 bg-indigo-500/10'
+                        : 'text-[#A3A6AF] hover:bg-[#2A2E39] hover:text-[#D1D4DC]'
                         }`}
                     title={toolbarItem.label}
                 >

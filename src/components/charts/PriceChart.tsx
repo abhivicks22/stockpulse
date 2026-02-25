@@ -114,7 +114,7 @@ export default function PriceChart({ data }: PriceChartProps) {
             {/* Minimal overlays/controls embedded over the canvas area */}
             <div className="flex items-center gap-4 mb-2 z-10">
                 {/* Time range */}
-                <div className="flex items-center">
+                <div className="flex items-center overflow-x-auto scrollbar-hide">
                     {RANGES.map((r) => (
                         <button
                             key={r}
