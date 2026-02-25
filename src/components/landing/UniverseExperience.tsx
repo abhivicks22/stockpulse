@@ -557,7 +557,7 @@ export default function UniverseExperience() {
                                     >
                                         <video
                                             ref={videoRef}
-                                            src="/videos/demo-optimized.mp4"
+                                            src="/videos/demo-full.mp4"
                                             controls={false}
                                             playsInline
                                             onPlay={() => setIsPlaying(true)}
