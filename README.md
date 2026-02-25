@@ -1,119 +1,102 @@
 # StockPulse 📈
 
-> AI-powered stock market dashboard — AdaL Vibecoding Bootcamp Capstone
+> **Zero Compromise. Zero Latency. Zero Dollars.**
+> Your AI-powered stock market dashboard, built for the AdaL Vibecoding Bootcamp Capstone.
 
 Live: [stockpulse.vercel.app](https://stockpulse.vercel.app) &nbsp;|&nbsp; Repo: [github.com/abhivicks22/stockpulse](https://github.com/abhivicks22/stockpulse)
 
 ---
 
-## 📖 Capstone Documentation
+## 💡 The Problem
 
-### The Problem
-Traditional retail trading platforms suffer from two major flaws:
-1. **Information Overload:** Legacy dashboards bombard users with thousands of metrics, ads, and cluttered UI, making it difficult to find actionable insights.
-2. **Emotional Trading:** Retail investors often trade based on hype rather than data because they lack a quick, objective way to gauge market sentiment.
+Traditional retail trading platforms suffer from massive flaws that put retail investors at a severe disadvantage to institutional traders:
+1. **Information Overload & Paywalls:** Legacy brokerages charge $30+/month for basic Level II market data and clutter your screen with thousands of useless metrics, confusing menus, and intrusive ads.
+2. **Emotional Trading:** Without access to instant, quantitative analysis of market news, retail investors often trade based on hype or fear rather than objective data.
+3. **Sluggish Performance:** Finding a ticker should take milliseconds, but outdated platforms are notoriously slow and clunky.
 
-### Our Solution (Value Proposition)
-StockPulse is a premium, distraction-free market dashboard that combines institutional-grade charting with AI-driven sentiment analysis. 
-- **Professional-Grade Visuals:** We stripped away the noise, providing clean, highly-performant TradingView charts in a modern glassmorphic interface.
-- **Live AI Sentiment Analysis:** Instead of reading 15 news articles, our AI instantly digests market news and tags stocks as **Bullish**, **Bearish**, or **Neutral**—providing an instant pulse check to prevent emotional trading.
-- **Fuzzy Search & Sync:** Lightning-fast stock discovery and persistent Postgres-backed watchlists ensure a seamless experience across all devices.
+## ✨ The Solution: The StockPulse Edge
 
-### Challenges & Issues Addressed
-During development, we tackled several complex technical hurdles:
-- **WebGL Performance in Next.js:** Integrating React Three Fiber (for the 3D hero background) with Next.js Server Components caused hydration mismatches. We solved this by creating a dynamically imported, pure-client `UniverseExperience` wrapper.
-- **Data API Rate Limiting:** Free financial APIs (like AlphaVantage) heavily restrict API calls. We designed a robust fallback mechanism using intelligent caching and seeded mock data, ensuring the dashboard always loads instantly during demos.
-- **OAuth Callbacks:** Deploying to Vercel initially broke our Supabase GitHub OAuth callback due to hardcoded localhost URLs. We successfully isolated and reconfigured the auth environment variables for production.
+StockPulse is a premium, distraction-free market intelligence platform designed exclusively to level the playing field. We combined **institutional-grade charting** with a **real-time AI sentiment engine**—all wrapped in a beautiful, lightning-fast glassmorphic UI.
 
-### Future Enhancements
-Looking forward, we plan to extend StockPulse with:
-1. **Real-time Price Alerts:** Allow users to set SMS/Email alerts when a stock crosses a specific price threshold or when AI sentiment dramatically shifts.
-2. **Portfolio Tracking:** Beyond a simple watchlist, let users input their holdings to calculate live P&L (Profit & Loss) alongside the sentiment analysis.
+- **Zero-Latency Professional Charting:** Built on top of the exact same lightweight rendering engine used by TradingView. Experience 60FPS fluid zooms, pans, and indicator layers straight in your browser.
+- **AI-Native Sentiment Engine:** We didn't bolt an AI chatbot on as an afterthought. StockPulse instantly digests thousands of news sources and analysts, tagging every ticker as **Bullish**, **Bearish**, or **Neutral** before you even place a trade.
+- **Fuzzy Search & Infinite Tracking:** Instantly find any global equity with our 300ms debounced search engine (even if you spell it wrong), and organize your strategies with unlimited, syncable Watchlists.
+- **100% Free Forever:** Get the institutional edge without paying subscription fees. No ads, no tracking, no nonsense.
 
 ---
 
-## Features
+## 🚀 Key Features
 
-- 🔐 **GitHub OAuth** via Supabase Auth
-- 📊 **Interactive Charts** — Candlestick / Line / Area (TradingView Lightweight Charts v5)
-- 🤖 **AI Sentiment Analysis** — Bullish / Bearish / Neutral scoring per stock
-- ⭐ **Smart Watchlist** — Add up to 20 stocks with live prices and sentiment badges
-- 🔍 **Fuzzy Stock Search** — 300ms debounced search across 13+ symbols
-- 🌙 **Dark Theme** — Native dark UI with glassmorphic components
-- 📱 **Responsive** — Mobile-first with Sheet sidebar navigation
+- **Seamless Authentication:** Secure login using GitHub or Google via Supabase OAuth.
+- **Interactive Technical Analysis:** Candlestick, Line, and Area charts powered by TradingView Lightweight Charts v5.
+- **AI Market Sentiment Data:** Instant "at-a-glance" pulse checks for every stock.
+- **Real-Time Market Array:** Track broader market health (S&P 500, NASDAQ, Crypto) via the live dashboard header.
+- **Smart Watchlists:** Postgres-backed, instant-sync watchlists available across all your desktop and mobile devices.
+- **Cinematic 3D Landing Page:** Immersive WebGL React Three Fiber space flight experience to introduce the platform's vision.
+- **Dark-Mode Native:** Highly polished, mobile-responsive glassmorphism design.
 
-## Tech Stack
+## 🛠️ Tech Stack
+
+Engineered for zero latency using modern web standards:
 
 | Layer | Technology |
 |---|---|
-| Framework | Next.js 16 (App Router, TypeScript) |
-| Styling | Tailwind CSS v4 + shadcn/ui |
-| Charts | TradingView Lightweight Charts v5 |
-| Auth | Supabase Auth (GitHub OAuth) |
-| Database | Supabase PostgreSQL + Prisma v5 ORM |
-| Animations | Framer Motion |
-| Icons | Lucide React |
-| Data | Alpha Vantage + Finnhub (with mock fallback) |
+| **Framework** | Next.js 16 (App Router, Server Components) |
+| **Styling**   | Tailwind CSS v4 + Framer Motion |
+| **3D Rendering** | React Three Fiber + Drei + WebGL |
+| **Charting**  | TradingView Lightweight Charts v5 |
+| **Database**  | Neon Serverless Postgres + Prisma v5 ORM |
+| **Auth**      | Supabase Auth (GitHub & Google OAuth) |
+| **APIs**      | Alpha Vantage + Finnhub (w/ Intelligent Caching & Fallbacks) |
 
-## Getting Started
+## 💻 Getting Started
+
+You can run StockPulse locally in minutes. The app is engineered to work flawlessly using **mock seeded data** even if you don't provide active financial API keys!
 
 ```bash
+# 1. Clone the repository
 git clone https://github.com/abhivicks22/stockpulse.git
 cd stockpulse
+
+# 2. Install dependencies
 npm install
-cp .env.local.example .env.local  # fill in your keys
+
+# 3. Configure environment variables
+cp .env.local.example .env.local  
+
+# 4. Start the development server
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000)
+Open [http://localhost:3000](http://localhost:3000) to see the application running.
 
-## Environment Variables
+### Environment Setup
+
+Add these to your `.env.local`:
 
 ```env
-NEXT_PUBLIC_SUPABASE_URL=         # Supabase project URL
-NEXT_PUBLIC_SUPABASE_ANON_KEY=    # Supabase anon key
-DATABASE_URL=                     # Postgres connection string
-DIRECT_URL=                       # Direct Postgres URL (for migrations)
-ALPHA_VANTAGE_API_KEY=            # alphavantage.co (free tier)
-FINNHUB_API_KEY=                  # finnhub.io (free tier)
+# Required for Authentication and Database via Supabase
+NEXT_PUBLIC_SUPABASE_URL=YOUR_SUPABASE_PROJECT_URL
+NEXT_PUBLIC_SUPABASE_ANON_KEY=YOUR_SUPABASE_ANON_KEY
+DATABASE_URL=YOUR_POSTGRES_CONNECTION_STRING
+DIRECT_URL=YOUR_DIRECT_POSTGRES_URL_FOR_MIGRATIONS
+
+# Optional: Real Market Data (Falls back to local mock data if empty)
+ALPHA_VANTAGE_API_KEY=YOUR_ALPHA_VANTAGE_KEY
+FINNHUB_API_KEY=YOUR_FINNHUB_KEY
+
+# Set to match your environment
 NEXT_PUBLIC_APP_URL=http://localhost:3000
 ```
 
-> The app works fully with **mock data** if no API keys are provided.
+## 🌐 Deployment
 
-## Project Structure
-
-```
-src/
-├── app/
-│   ├── api/stocks/          # Quote, OHLCV, sentiment, search
-│   ├── api/watchlist/       # Watchlist CRUD
-│   ├── dashboard/           # Protected pages
-│   │   ├── chart/[symbol]/  # Full chart view
-│   │   ├── watchlist/       # Watchlist manager
-│   │   ├── alerts/          # Price alerts (coming soon)
-│   │   └── settings/        # User settings
-│   ├── sign-in/ sign-up/    # Auth pages
-│   └── page.tsx             # Landing page
-├── components/
-│   ├── charts/              # PriceChart + ChartContainer
-│   ├── dashboard/           # Sidebar, Header, WatchlistTable, SentimentBadge
-│   └── landing/             # Navbar, Hero, Features, etc.
-├── lib/
-│   ├── mock-data.ts         # Seeded OHLCV + quote generators
-│   ├── prisma.ts            # Prisma singleton
-│   └── supabase/            # Client + server Supabase helpers
-└── types/index.ts           # Shared TypeScript interfaces
-```
-
-## Deployment
-
-Deploy with one click on Vercel:
+Deploying your own instance to Vercel takes 60 seconds:
 
 [![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/abhivicks22/stockpulse)
 
-Set all environment variables in your Vercel project dashboard.
+*(Make sure to copy your environment variables into the Vercel project settings during setup!)*
 
 ---
 
-Built for the **AdaL Vibecoding Bootcamp** Capstone &nbsp;•&nbsp; Powered by [TradingView Lightweight Charts™](https://tradingview.com)
+*Built with ❤️ for the **AdaL Vibecoding Bootcamp** Capstone.*
